@@ -1,0 +1,38 @@
+{
+  "_comment": "Main suite. Distillation loss of Passalis et al. (CVPR 2020) with the TA protocol of that paper; training recipe of the kshs-aimlab-benchmarks MaskedKD reference runner. See README.md for every choice.",
+  "seeds": [0, 1, 2],
+  "mask_ratio": 0.5,
+  "archs": {"teacher": "deit_base", "assistant": "deit_small_w2", "student": "deit_small"},
+  "init": {"teacher": "imagenet", "assistant": "widen", "student": "imagenet"},
+  "widen_from": "deit_small",
+  "widen_noise": 0.01,
+  "epochs": {"teacher": 30, "assistant": 100, "student": 100},
+  "batch_size": 128,
+  "eval_batch_size": 256,
+  "warmup_epochs": 5,
+  "learning_rate": 5e-05,
+  "min_learning_rate": 1e-06,
+  "weight_decay": 0.05,
+  "drop_path": 0.1,
+  "gradient_clip": 1.0,
+  "precision": "bf16",
+  "loss": {
+    "type": "hkd",
+    "label_smoothing": 0.1,
+    "ce_weight": 1.0,
+    "logit_weight": 0.0,
+    "flow_weight": 1.0,
+    "temperature": 1.0,
+    "feature_pool": "cls",
+    "alpha_init": 100.0,
+    "gamma": 0.7,
+    "stages": {
+      "assistant": {"taps": [], "final": true},
+      "student": {"taps": [3, 6, 9], "final": true}
+    }
+  },
+  "probe_epochs": [0, 10, 25, 50, 75, 100],
+  "checkpoint_every": 5,
+  "keep_resume": false,
+  "save_last": false
+}

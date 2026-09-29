@@ -1,0 +1,60 @@
+[project]
+name = "takd-maskedkd"
+version = "0.1.0"
+description = "Compute vs. learning efficiency of teacher-assistant KD with MaskedKD (DeiT-B -> DeiT-S x2 -> DeiT-S, COCO single)"
+readme = "README.md"
+requires-python = ">=3.12,<3.14"
+dependencies = [
+  "numpy>=2.0",
+  "pillow>=10.0",
+  "pycocotools>=2.0.10",
+  "matplotlib>=3.9",
+]
+
+[project.optional-dependencies]
+# Exactly one of these is installed by scripts/setup.sh (cu130 needs NVIDIA driver >= 580).
+cpu = ["torch==2.14.0"]
+cu126 = ["torch==2.14.0"]
+cu130 = ["torch==2.14.0"]
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[tool.uv]
+required-version = ">=0.12"
+environments = [
+  "sys_platform == 'linux' and platform_machine == 'x86_64'",
+  "sys_platform == 'win32' and platform_machine == 'AMD64'",
+]
+conflicts = [
+  [
+    { extra = "cpu" },
+    { extra = "cu126" },
+    { extra = "cu130" },
+  ],
+]
+
+[tool.uv.sources]
+torch = [
+  { index = "pytorch-cpu", extra = "cpu" },
+  { index = "pytorch-cu126", extra = "cu126" },
+  { index = "pytorch-cu130", extra = "cu130" },
+]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[[tool.uv.index]]
+name = "pytorch-cu126"
+url = "https://download.pytorch.org/whl/cu126"
+explicit = true
+
+[[tool.uv.index]]
+name = "pytorch-cu130"
+url = "https://download.pytorch.org/whl/cu130"
+explicit = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

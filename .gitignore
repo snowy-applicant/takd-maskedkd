@@ -1,0 +1,11 @@
+# Repo-local toolchain, caches and environments (scripts/env.sh)
+/.tools/
+/.cache/
+/.venv/
+/.tmp/
+# Data, training outputs and logs (large; never committed)
+/data/
+/outputs/
+__pycache__/
+*.pyc
+*.tmp
